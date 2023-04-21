@@ -27,10 +27,9 @@ for x in data[0]:
 # assigning columns to latitude and longtitude
 longitude = df.loc[1:, long_ind]
 latitude = df.loc[1:, lat_ind]
-longitude.np.array
-print(type(longitude))
-print(longitude)
-print(latitude[1])
+# print(type(longitude))
+# print(longitude)
+# print(latitude[1])
 # converting to utm
 location = utm.from_latlon(latitude, longitude)
 print(location)
