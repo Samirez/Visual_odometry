@@ -1,4 +1,6 @@
 import csv
+
+import numpy as np
 import utm
 import pandas as pd
 
@@ -27,13 +29,16 @@ for x in data[0]:
         print(i)
     i += 1
 # ------------------------ assigning columns to latitude and longtitude ----------------------------------
-longitude = df.loc[1:, long_ind]
-latitude = df.loc[1:, lat_ind]
-# print(type(longitude))
+longitude = df.loc[1:, long_ind].astype(float)
+latitude = df.loc[1:, lat_ind].astype(float)
+
 # print(longitude)
 # print(latitude[1])
 
 # --------------------- converting to utm ----------------------------------------------------------------
-location = utm.from_latlon(latitude, longitude)
+location = np.array(len(longitude))
+# location = utm.from_latlon(latitude[2], longitude[2])
+'''for i in range(1, len(latitude)):
+    location[i] = utm.from_latlon(latitude[i], longitude[i])
 
-print(location)
+print(location)'''
