@@ -37,7 +37,6 @@ latitude = df.loc[1:, lat_ind].astype(float)
 # print(len(longitude))
 location_list = []
 for i in range(1, len(latitude)):
-    location = 0
     location = utm.from_latlon(latitude[i], longitude[i])
     location_list.append(location)
 
@@ -56,5 +55,3 @@ for x in range(1, len(location_list)):
 plt.plot(easting, northing)
 plt.savefig('drone_flight_path.png')   # save the figure to file
 plt.close()    # close the figure window
-
-
