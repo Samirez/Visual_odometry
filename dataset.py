@@ -61,6 +61,7 @@ for x in range(1, len(location_list)):
 # starts from index 1
 # visualizing the data from the given coordinates
 plt.plot(easting, northing)
-plt.show()
+plt.savefig('drone_flight_path.png')   # save the figure to file
+plt.close()    # close the figure window
 
 
