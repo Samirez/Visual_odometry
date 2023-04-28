@@ -46,7 +46,6 @@ northing = []
 # updates the list for longitude and latitude for UTM format
 for x in range(1, len(location_list)):
     for idx, val in enumerate(location_list[x]):
-        print(idx, val)
         if idx == 0:
             easting.append(val)
         elif idx == 1:
