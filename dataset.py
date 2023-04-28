@@ -36,9 +36,23 @@ latitude = df.loc[1:, lat_ind].astype(float)
 # print(latitude[1])
 
 # --------------------- converting to utm ----------------------------------------------------------------
-location = np.array(len(longitude))
-# location = utm.from_latlon(latitude[2], longitude[2])
-'''for i in range(1, len(latitude)):
-    location[i] = utm.from_latlon(latitude[i], longitude[i])
+# print(len(latitude))
+# print(len(longitude))
+location_list = []
+for i in range(1, len(latitude)):
+    Location = 0
+    location = utm.from_latlon(latitude[i], longitude[i])
+    location_list.append(location)
 
-print(location)'''
+print(location_list[1])
+# updates the list for longitude and latitude for UTM format
+for x in range(1, len(location_list)):
+    for y in location_list[x]:
+        if y == 0:
+            latitude[x] = y
+        elif y == 1:
+            longitude[x] = y
+
+# starts from index 1
+print(latitude[1])
+print(longitude[1])
