@@ -4,7 +4,7 @@ import glob
 import OpenGL.GL as gl
 from display import Display3D
 import collections
-import g2opy as g2o
+import g2o
 
 np.set_printoptions(precision=4, suppress=True)
 
