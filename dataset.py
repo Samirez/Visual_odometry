@@ -5,6 +5,8 @@ import utm
 import pandas as pd
 
 # ---------------- reading the data ------------------------------------------------
+from matplotlib import pyplot as plt
+
 data = []
 with open('DJIFlightRecord_2021-03-18_[13-04-51]-TxtLogToCsv.csv', mode='r') as file:
     csvFile = csv.reader(file)
@@ -45,14 +47,20 @@ for i in range(1, len(latitude)):
     location_list.append(location)
 
 print(location_list[1:4])
+easting = []
+northing = []
 # updates the list for longitude and latitude for UTM format
 for x in range(1, len(location_list)):
     for idx, val in enumerate(location_list[x]):
+        print(idx, val)
         if idx == 0:
-            latitude[x] = val
+            easting.append(val)
         elif idx == 1:
-            longitude[x] = val
+            northing.append(val)
 
 # starts from index 1
-print(latitude[1:4])
-print(longitude[1:4])
+# visualizing the data from the given coordinates
+plt.plot(easting, northing)
+plt.show()
+
+
