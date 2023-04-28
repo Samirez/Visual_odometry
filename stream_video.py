@@ -1,6 +1,7 @@
-import cv2
-import numpy as np
 import os
+
+import cv2
+
 
 def main():
     check_directories()
@@ -20,15 +21,17 @@ def main():
             break
         cv2.imshow('frame', frame)
         save_frame += 1
-    
+
     cap.release()
     cv2.destroyAllWindows()
+
 
 def check_directories():
     if not os.path.exists('./input/video'):
         os.makedirs('./input/video')
     if not os.path.exists('./output/images'):
         os.makedirs('./output/images')
-    
+
+
 if __name__ == '__main__':
     main()
