@@ -40,19 +40,19 @@ latitude = df.loc[1:, lat_ind].astype(float)
 # print(len(longitude))
 location_list = []
 for i in range(1, len(latitude)):
-    Location = 0
+    location = 0
     location = utm.from_latlon(latitude[i], longitude[i])
     location_list.append(location)
 
-print(location_list[1])
+print(location_list[1:4])
 # updates the list for longitude and latitude for UTM format
 for x in range(1, len(location_list)):
-    for y in location_list[x]:
-        if y == 0:
-            latitude[x] = y
-        elif y == 1:
-            longitude[x] = y
+    for idx, val in enumerate(location_list[x]):
+        if idx == 0:
+            latitude[x] = val
+        elif idx == 1:
+            longitude[x] = val
 
 # starts from index 1
-print(latitude[1])
-print(longitude[1])
+print(latitude[1:4])
+print(longitude[1:4])
