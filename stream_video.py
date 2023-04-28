@@ -1,7 +1,9 @@
 import cv2
 import numpy as np
+import os
 
 def main():
+    check_directories()
     video_name = './input/video/DJI_0199.MOV'
     output_images = './output/images/'
     cap = cv2.VideoCapture(video_name)
@@ -21,6 +23,12 @@ def main():
     
     cap.release()
     cv2.destroyAllWindows()
+
+def check_directories():
+    if not os.path.exists('./input/video'):
+        os.makedirs('./input/video')
+    if not os.path.exists('./output/images'):
+        os.makedirs('./output/images')
     
 if __name__ == '__main__':
     main()
