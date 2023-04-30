@@ -1,11 +1,4 @@
-import cv2
-import numpy as np
-import math
-import argparse
-import matplotlib.pyplot as plt
-import time
-import plotly.graph_objects as go
-from codetiming import Timer
+from initials import *
 
 
 # Code borrowed from the following sources
