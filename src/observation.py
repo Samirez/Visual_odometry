@@ -1,4 +1,4 @@
-from libs import *
+from initials import *
 
 class Observation():
     def __init__(self, point_id, camera_id, image_coordinates):

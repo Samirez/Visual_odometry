@@ -1,4 +1,4 @@
-from libs import *
+from initials import *
 
 class ImagePair():
     """
