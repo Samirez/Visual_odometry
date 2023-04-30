@@ -1,5 +1,4 @@
 import os
-
 import cv2
 
 
@@ -27,11 +26,13 @@ def main():
 
 
 def check_directories():
+    if not os.path.exists('./input/images'):
+        os.makedirs('./input/images')
     if not os.path.exists('./input/video'):
         os.makedirs('./input/video')
     if not os.path.exists('./output/images'):
         os.makedirs('./output/images')
-
-
+    if not os.path.exists('./output/video'):
+        os.makedirs('./output/video')
 if __name__ == '__main__':
     main()
