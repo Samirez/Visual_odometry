@@ -44,8 +44,6 @@ def rotationMatrixToEulerAngles(R) :
 
 
 
-
-
 class ImagePair():
     def __init__(self, detector_name):
         if detector_name == "ORB":
