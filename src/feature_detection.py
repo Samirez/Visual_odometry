@@ -26,7 +26,7 @@ for m, n in knbmatches:
 
 outimg = cv2.drawMatches(frame1, keypoints1, frame2, keypoints2, good_matches, None,
                          flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
-cv2.imwrite("output/images/matches.jpg", outimg)
+cv2.imwrite("../output/images/matches.jpg", outimg)
 
 CM = np.array([[2676.1051390718389, -35.243952918157035, -279.58562078697361],
                [0.0097935857180804498, -0.021794052829051412, 0.017776502734846815],
@@ -59,7 +59,7 @@ essentialMatrix, mask = cv2.findEssentialMat(
 
 img3 = cv2.drawMatches(frame1, keypoints1, frame2, keypoints2, matches, None,
                        flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
-cv2.imwrite("output/images/essentialmatrix_matching.jpg", img3)
+cv2.imwrite("../output/images/essentialmatrix_matching.jpg", img3)
 
 match_indices = match_indices[mask.ravel() == 1]
 filtered_matches = []
@@ -69,16 +69,13 @@ for idx in match_indices:
 
 img3 = cv2.drawMatches(frame1, keypoints1, frame2, keypoints2, filtered_matches, None,
                        flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
-cv2.imwrite("output/images/essentialmatrix_matching_filtered.jpg", img3)
+cv2.imwrite("../output/images/essentialmatrix_matching_filtered.jpg", img3)
 
-import cv2
-import numpy as np
-
-frame1 = cv2.imread("output/images/DJI_0199_1200.jpg")
+frame1 = cv2.imread("../output/images/DJI_0199_1200.jpg")
 sift1 = cv2.SIFT_create()
 keypoints1, descriptors1 = sift1.detectAndCompute(frame1, None)
 
-frame2 = cv2.imread("output/images/DJI_0199_1250.jpg")
+frame2 = cv2.imread("../output/images/DJI_0199_1250.jpg")
 keypoints2, descriptors2 = sift1.detectAndCompute(frame2, None)
 
 matcher = cv2.DescriptorMatcher_create(cv2.DESCRIPTOR_MATCHER_FLANNBASED)
@@ -130,17 +127,3 @@ mean_distance = np.mean(distance)
 std_distance = np.std(distance)
 print("mean distance: ", mean_distance)
 print("std distance: ", std_distance)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
