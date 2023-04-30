@@ -36,7 +36,6 @@ class VisualSlam:
         self.camera_matrix *= self.scale_factor
         self.camera_matrix[2, 2] = 1
 
-
     def add_to_list_of_frames(self, image):
         frame = self.frame_generator.make_frame(image)
         self.list_of_frames.append(frame)
@@ -370,8 +369,8 @@ class VisualSlam:
             frame = self.process_frame(img)
             self.map.show_map_statistics()
 
-            #cv2.imshow("test", frame);
-            k = cv2.waitKey(400000)
+            cv2.imshow("test", frame);
+            k = cv2.waitKey(0)
             if k == ord('q'):
                 break
             if k == ord('p'):
@@ -387,12 +386,13 @@ class VisualSlam:
         while True:
             k = cv2.waitKey(100)
             if k == ord('q'):
+                cv2.destroyAllWindows()
                 break
 
 def main():
     vs = VisualSlam("./input/images")
     vs.set_camera_matrix()
     vs.run()
-
+    
 if __name__ == "__main__":
     main()

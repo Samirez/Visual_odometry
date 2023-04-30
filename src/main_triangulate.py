@@ -1,20 +1,5 @@
 from initials import *
 from triangulate_points_from_images import TriangulatePointsFromTwoImages
-
-
-
-
-
-
-
-
-# Parse command line args
-
-
-
-# Notes to my self
-# The order of images seems to be important for the reconstruction. This should be investigated.
-
     
 def main():
     
