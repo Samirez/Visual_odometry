@@ -389,7 +389,10 @@ class VisualSlam:
             if k == ord('q'):
                 break
 
+def main():
+    vs = VisualSlam("./input/images")
+    vs.set_camera_matrix()
+    vs.run()
 
-vs = VisualSlam("./input/images")
-vs.set_camera_matrix()
-vs.run()
+if __name__ == "__main__":
+    main()
