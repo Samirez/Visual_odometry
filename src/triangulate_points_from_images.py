@@ -1,7 +1,7 @@
 from initials import *
 from image_and_keypoints import ImageAndKeypoints
 from image_pair import ImagePair
-
+from map import Map
 class TriangulatePointsFromTwoImages():
     def __init__(self):
         pass
@@ -32,6 +32,8 @@ class TriangulatePointsFromTwoImages():
         pair12.show_estimated_camera_motion()
         pair12.visualise_points_in_3d_with_plotly()
 
+        map = Map()
+        
         visualization12 = pair12.visualize_filtered_matches()
         cv2.imwrite("./output/images/filtered_matches.png", visualization12)
         cv2.waitKey(0)
