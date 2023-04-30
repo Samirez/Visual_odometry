@@ -45,6 +45,8 @@ for idx, m in enumerate(matches):
 
 points1 = np.float32(points1_temp)
 points2 = np.float32(points2_temp)
+# points1 = np.array(points1_temp, dtype=np.float32)
+# points2 = np.array(points2_temp, dtype=np.float32)
 match_indices = np.int32(match_indices_temp)
 ransacReprojecThreshold = 1
 confidence = 0.99
@@ -94,8 +96,8 @@ CM = np.array([[2676.1051390718389, -35.243952918157035, -279.58562078697361],
 ransacReprojecThreshold = 1
 confidence = 0.99
 essentialMatrix, mask = cv2.findEssentialMat(
-    keypoints1,
-    keypoints2,
+    points1,
+    points2,
     CM,
     cv2.FM_RANSAC,
     confidence,
