@@ -1,65 +1,9 @@
-from libs import *
-
-np.set_printoptions(precision=4, suppress=True)
-
-Feature = collections.namedtuple('Feature', 
-        ['keypoint', 'descriptor', 'feature_id'])
-Match = collections.namedtuple('Match', 
-        ['featureid1', 'featureid2', 
-            'keypoint1', 'keypoint2', 
-            'descriptor1', 'descriptor2', 
-            'distance', 'color'])
-Match3D = collections.namedtuple('Match3D', 
-        ['featureid1', 'featureid2', 
-            'keypoint1', 'keypoint2', 
-            'descriptor1', 'descriptor2', 
-            'distance', 'color', 
-            'point'])
-MatchWithMap = collections.namedtuple('MatchWithMap', 
-        ['featureid1', 'featureid2', 
-            'imagecoord', 'mapcoord', 
-            'descriptor1', 'descriptor2', 
-            'distance'])
-
-
-
-
-
-
-
-
-
-def quarternion_to_rotation_matrix(q):
-    """
-    The formula for converting from a quarternion to a rotation 
-    matrix is taken from here:
-    https://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToMatrix/index.htm
-    """
-    qw = q.w()
-    qx = q.x()
-    qy = q.y()
-    qz = q.z()
-    R11 = 1 - 2*qy**2 - 2*qz**2	
-    R12 = 2*qx*qy - 2*qz*qw
-    R13 = 2*qx*qz + 2*qy*qw
-    R21 = 2*qx*qy + 2*qz*qw
-    R22 = 1 - 2*qx**2 - 2*qz**2
-    R23 = 2*qy*qz - 2*qx*qw
-    R31 = 2*qx*qz - 2*qy*qw
-    R32 = 2*qy*qz + 2*qx*qw 
-    R33 = 1 - 2*qx**2 - 2*qy**2
-    R = np.array([[R11, R12, R13], [R21, R22, R23], [R31, R32, R33]])
-    return R
-
-
-
-
-
-
-        
-
-
-
+from initials import *
+from tracked_point import TrackedPoint
+from frame_generator import FrameGenerator
+from map import Map
+from tracked_camera import TrackedCamera
+from observation import Observation
 
 class VisualSlam:
     def __init__(self, inputdirectory, feature = "ORB"):

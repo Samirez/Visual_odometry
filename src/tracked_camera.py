@@ -1,4 +1,4 @@
-from libs import *
+from initials import *
 
 class TrackedCamera():
     def __init__(self, R, t, frame_id, frame, camera_id = None, fixed = False):

@@ -1,4 +1,4 @@
-from libs import *
+from initials import *
 from frame import Frame
 
 class FrameGenerator():
