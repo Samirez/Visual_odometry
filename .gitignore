@@ -3,3 +3,4 @@ input/*
 output/*
 frames_limited/*
 visual_odometry_template_02/*
+__pycache__
