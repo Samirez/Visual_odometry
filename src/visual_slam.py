@@ -27,9 +27,11 @@ class VisualSlam:
 
     def set_camera_matrix(self):
         self.camera_matrix = np.array([[2676.1051390718389, 0., 3840 / 2 - 35.243952918157035], 
-            [0.000000000000e+00, 279.58562078697361, 2160 / 2 - 279.58562078697361],
+            [0.000000000000e+00, 2676.1051390718389, 2160 / 2 - 279.58562078697361],
             [0.000000000000e+00, 0.000000000000e+00, 1.000000000000e+00]])
-
+        # self.camera_matrix = np.array([[2676, 0., 3840 / 2 - 35.24], 
+        #     [0.000000000000e+00, 2676., 2160 / 2 - 279],
+        #     [0.000000000000e+00, 0.000000000000e+00, 1.000000000000e+00]])
         #self.scale_factor = 0.2
         self.scale_factor = 0.3
         #self.scale_factor = 1
@@ -379,6 +381,7 @@ class VisualSlam:
                 # Perform bundle adjusment
                 self.unfreeze_cameras(5)
                 self.print_camera_details()
+                self.map.show_total_reprojection_error()
                 self.map.optimize_map()
                 self.freeze_nonlast_cameras()
                 self.print_camera_details()
