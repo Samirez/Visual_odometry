@@ -7,16 +7,17 @@ from tracked_camera import TrackedCamera
 from observation import Observation
 from image_pair import ImagePair
 
+
 class VisualSlam:
-    def __init__(self, inputdirectory, feature = "ORB"):
+    def __init__(self, inputdirectory, feature="ORB"):
         self.input_directory = inputdirectory
 
         # Use ORB features
-        #self.detector = cv2.ORB_create()
+        # self.detector = cv2.ORB_create()
         self.detector = cv2.SIFT_create()
-        #self.bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
+        # self.bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
         self.bf = cv2.BFMatcher(cv2.NORM_L2, crossCheck=True)
-        
+
         self.frame_generator = FrameGenerator(self.detector)
         self.list_of_frames = []
         self.map = Map()
@@ -24,24 +25,31 @@ class VisualSlam:
         self.feature_mapper = {}
         self.feature_history = {}
 
-
     def set_camera_matrix(self):
+<<<<<<< Updated upstream
         self.camera_matrix = np.array([[2676.1051390718389, 0., 3840 / 2 - 35.243952918157035], 
-            [0.000000000000e+00, 2676.1051390718389, 2160 / 2 - 279.58562078697361],
+            [0.000000000000e+00, 279.58562078697361, 2160 / 2 - 279.58562078697361],
             [0.000000000000e+00, 0.000000000000e+00, 1.000000000000e+00]])
+
+        #self.scale_factor = 0.2
+=======
+        self.camera_matrix = np.array([[2676.1051390718389, 0., 3840 / 2 - 35.243952918157035],
+                                       [0.000000000000e+00, 2676.1051390718389, 2160 / 2 - 279.58562078697361],
+                                       [0.000000000000e+00, 0.000000000000e+00, 1.000000000000e+00]])
         # self.camera_matrix = np.array([[2676, 0., 3840 / 2 - 35.24], 
         #     [0.000000000000e+00, 2676., 2160 / 2 - 279],
         #     [0.000000000000e+00, 0.000000000000e+00, 1.000000000000e+00]])
-        #self.scale_factor = 0.2
+        # self.scale_factor = 0.2
+>>>>>>> Stashed changes
         self.scale_factor = 0.3
-        #self.scale_factor = 1
+        # self.scale_factor = 1
         self.camera_matrix *= self.scale_factor
         self.camera_matrix[2, 2] = 1
+
 
     def add_to_list_of_frames(self, image):
         frame = self.frame_generator.make_frame(image)
         self.list_of_frames.append(frame)
-
 
     def initialize_map(self, image_pair):
         self.map.clean()
@@ -57,88 +65,84 @@ class VisualSlam:
 
         # We have only seen two frame, to initialize a map.
         first_camera = TrackedCamera(
-                np.eye(3), 
-                np.zeros((3)), 
-                ip.frame1.id,
-                image_pair.frame1.image,
-                fixed = True)
+            np.eye(3),
+            np.zeros(3),
+            ip.frame1.id,
+            image_pair.frame1.image,
+            fixed=True)
         second_camera = TrackedCamera(
-                ip.R, 
-                ip.t.T[0],
-                ip.frame2.id,
-                image_pair.frame2.image,
-                fixed = False)
+            ip.R,
+            ip.t.T[0],
+            ip.frame2.id,
+            image_pair.frame2.image,
+            fixed=False)
         first_camera = self.map.add_camera(first_camera)
         second_camera = self.map.add_camera(second_camera)
 
         for match in ip.matches_with_3d_information:
             tp = TrackedPoint(
-                    match.point, 
-                    match.descriptor1, 
-                    match.color, 
-                    match.featureid1)
+                match.point,
+                match.descriptor1,
+                match.color,
+                match.featureid1)
             tp = self.map.add_point(tp)
 
-            observation1 = Observation(tp.point_id, 
-                    first_camera.camera_id, 
-                    match.keypoint1)
-            observation2 = Observation(tp.point_id, 
-                    second_camera.camera_id, 
-                    match.keypoint2)
+            observation1 = Observation(tp.point_id,
+                                       first_camera.camera_id,
+                                       match.keypoint1)
+            observation2 = Observation(tp.point_id,
+                                       second_camera.camera_id,
+                                       match.keypoint2)
 
             self.map.observations.append(observation1)
             self.map.observations.append(observation2)
 
-        #self.map.remove_observations_with_reprojection_errors_above_threshold(100)
+        # self.map.remove_observations_with_reprojection_errors_above_threshold(100)
         self.map.optimize_map()
-        #self.map.calculate_reprojection_error(0.1)
-        #self.map.remove_observations_with_reprojection_errors_above_threshold(1)
-
+        # self.map.calculate_reprojection_error(0.1)
+        # self.map.remove_observations_with_reprojection_errors_above_threshold(1)
 
     def track_feature_back_in_time(self, featureid):
         while featureid in self.feature_mapper:
             featureid_old = featureid
             featureid = self.feature_mapper[featureid]
-            #print(featureid, " <- ", featureid_old)
+            # print(featureid, " <- ", featureid_old)
         return featureid
-
 
     def add_new_match_to_map(self, match, first_camera, second_camera):
         tp = TrackedPoint(
-                match.point, 
-                match.descriptor1, 
-                match.color, 
-                match.featureid1)
+            match.point,
+            match.descriptor1,
+            match.color,
+            match.featureid1)
         tp = self.map.add_point(tp)
 
         observation1 = Observation(
-                tp.point_id, 
-                first_camera.camera_id, 
-                match.keypoint1)
+            tp.point_id,
+            first_camera.camera_id,
+            match.keypoint1)
         observation2 = Observation(
-                tp.point_id, 
-                second_camera.camera_id, 
-                match.keypoint2)
+            tp.point_id,
+            second_camera.camera_id,
+            match.keypoint2)
 
         self.map.observations.append(observation1)
         self.map.observations.append(observation2)
-
 
     def add_new_observation_of_existing_point(
             self, featureid, match, camera):
 
         try:
             tp = self.mappointdict[featureid]
-            observation = Observation(tp.point_id, 
-                    camera.camera_id, 
-                    match.keypoint2)
+            observation = Observation(tp.point_id,
+                                      camera.camera_id,
+                                      match.keypoint2)
             self.map.observations.append(observation)
         except Exception as e:
             print("Exception in add_new_observation_of_existing_point")
             print(e)
             print(self.mappointdict)
             print("-----------")
-
 
     def add_point_observation_to_map(self, match, first_camera, second_camera):
         try:
@@ -147,7 +151,7 @@ class VisualSlam:
 
             if featureid in self.mappointdict:
                 self.add_new_observation_of_existing_point(
-                        featureid, match, second_camera)
+                    featureid, match, second_camera)
             else:
                 pass
                 self.add_new_match_to_map(match, first_camera, second_camera)
@@ -155,7 +159,6 @@ class VisualSlam:
             print("Error in add_point_observation_to_map")
             print(match)
             print(e)
-
 
     def add_information_to_map(self):
         # Make dict with all points in the current map
@@ -175,9 +178,9 @@ class VisualSlam:
         projection_matrix_two = camera_dict[ip.frame1.id].pose()
 
         ip.reconstruct_3d_points(
-                essential_matches, 
-                projection_matrix_one[0:3, :], 
-                projection_matrix_two[0:3, :])
+            essential_matches,
+            projection_matrix_one[0:3, :],
+            projection_matrix_two[0:3, :])
 
         first_camera = camera_dict[ip.frame1.id]
         second_camera = camera_dict[ip.frame2.id]
@@ -186,8 +189,7 @@ class VisualSlam:
                 continue
             self.add_point_observation_to_map(match, first_camera, second_camera)
 
-        #self.map.calculate_reprojection_error()
-
+        self.map.calculate_reprojection_error()
 
     def update_feature_mapper(self):
         for match in self.current_image_pair.matches_with_3d_information:
@@ -196,7 +198,6 @@ class VisualSlam:
             # access later on.
             self.feature_history[match.featureid1] = match
 
-
     def estimate_current_camera_position(self, current_frame: Frame):
         self.update_feature_mapper()
 
@@ -204,7 +205,6 @@ class VisualSlam:
         self.mappointdict = {}
         for point in self.map.points:
             self.mappointdict[point.feature_id] = point
-
 
         if len(self.list_of_frames) < 3:
             return
@@ -219,31 +219,31 @@ class VisualSlam:
             if feature_id in self.mappointdict:
                 image_feature = self.feature_history[match.featureid1]
                 map_feature = self.mappointdict[feature_id]
-                t = MatchWithMap(image_feature.featureid2, 
-                        map_feature.feature_id, 
-                        image_feature.keypoint2,
-                        map_feature.point, 
-                        image_feature.descriptor2, 
-                        map_feature.descriptor, 
-                        0)   # TODO: Set to the proper feature distance
+                t = MatchWithMap(image_feature.featureid2,
+                                 map_feature.feature_id,
+                                 image_feature.keypoint2,
+                                 map_feature.point,
+                                 image_feature.descriptor2,
+                                 map_feature.descriptor,
+                                 0)  # TODO: Set to the proper feature distance
                 matches_with_map.append(t)
 
         print("Matches with map")
         print(len(matches_with_map))
-        image_coords = [match.imagecoord 
-                for match 
-                in matches_with_map]
+        image_coords = [match.imagecoord
+                        for match
+                        in matches_with_map]
 
         map_coords = [match.mapcoord
-                for match 
-                in matches_with_map]
+                      for match
+                      in matches_with_map]
 
-        try: 
+        try:
             retval, rvec, tvec, inliers = cv2.solvePnPRansac(
-                    np.array(map_coords), 
-                    np.array(image_coords), 
-                    self.camera_matrix, 
-                    np.zeros(4)) 
+                np.array(map_coords),
+                np.array(image_coords),
+                self.camera_matrix,
+                np.zeros(4))
 
             if retval:
                 self.mappointdict = {}
@@ -253,11 +253,11 @@ class VisualSlam:
                 print("Succesfully estimated the camera position")
                 R, _ = cv2.Rodrigues(rvec)
                 camera = TrackedCamera(
-                        R,
-                        tvec,
-                        current_frame.id, 
-                        current_frame.image, 
-                        fixed = False)
+                    R,
+                    tvec,
+                    current_frame.id,
+                    current_frame.image,
+                    fixed=False)
                 camera = self.map.add_camera(camera)
 
                 self.add_information_to_map()
@@ -275,10 +275,9 @@ class VisualSlam:
         self.print_camera_details()
         self.map.optimize_map()
         self.map.remove_observations_with_reprojection_errors_above_threshold(1)
-        #self.unfreeze_cameras()
-        #self.map.optimize_map()
-                
-        
+        # self.unfreeze_cameras()
+        # self.map.optimize_map()
+
     def freeze_nonlast_cameras(self):
         for idx, camera in enumerate(self.map.cameras):
             self.map.cameras[idx].fixed = True
@@ -286,19 +285,16 @@ class VisualSlam:
         if len(self.map.cameras) > 2:
             self.map.cameras[-2].fixed = False
 
-
     def print_camera_details(self):
         for camera in self.map.cameras:
             print(camera)
 
-
-    def unfreeze_cameras(self, number_of_fixed_cameras = 5):
+    def unfreeze_cameras(self, number_of_fixed_cameras=5):
         for idx, camera in enumerate(self.map.cameras):
             if idx > number_of_fixed_cameras:
                 self.map.cameras[idx].fixed = False
             else:
                 self.map.cameras[idx].fixed = True
-
 
     def match_current_and_previous_frame(self):
         if len(self.list_of_frames) < 2:
@@ -326,33 +322,30 @@ class VisualSlam:
         self.map.limit_number_of_camera_in_map(18)
         cv2.waitKey(100)
 
-
         # Testing the new visualization framework.
         viewport = ThreeDimViewer.ThreeDimViewer()
         viewport.vertices = [point.point
-                    for point
-                    in self.map.points]
+                             for point
+                             in self.map.points]
         viewport.colors = [point.color
-                    for point 
-                    in self.map.points]
+                           for point
+                           in self.map.points]
 
         viewport.cameras = [camera
-                    for camera
-                    in self.map.cameras]
+                            for camera
+                            in self.map.cameras]
         viewport.main()
-
 
     def show_map_points(self, message):
         print(message)
         for element in self.map.points:
             print(element)
 
-
     def process_frame(self, frame):
         self.add_to_list_of_frames(frame)
         self.match_current_and_previous_frame()
         return frame
-    
+
     def run(self):
         list_of_files = glob.glob("%s/*.jpg" % self.input_directory)
         list_of_files.sort()
@@ -371,8 +364,13 @@ class VisualSlam:
             frame = self.process_frame(img)
             self.map.show_map_statistics()
 
-            cv2.imshow("test", frame);
+<<<<<<< Updated upstream
+            #cv2.imshow("test", frame);
+            k = cv2.waitKey(400000)
+=======
+            cv2.imshow("test", frame)
             k = cv2.waitKey(0)
+>>>>>>> Stashed changes
             if k == ord('q'):
                 break
             if k == ord('p'):
@@ -381,7 +379,6 @@ class VisualSlam:
                 # Perform bundle adjusment
                 self.unfreeze_cameras(5)
                 self.print_camera_details()
-                self.map.show_total_reprojection_error()
                 self.map.optimize_map()
                 self.freeze_nonlast_cameras()
                 self.print_camera_details()
@@ -389,13 +386,17 @@ class VisualSlam:
         while True:
             k = cv2.waitKey(100)
             if k == ord('q'):
-                cv2.destroyAllWindows()
                 break
+
 
 def main():
     vs = VisualSlam("./input/images")
     vs.set_camera_matrix()
     vs.run()
-    
+
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 if __name__ == "__main__":
     main()
