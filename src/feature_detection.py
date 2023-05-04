@@ -39,6 +39,7 @@ cv2.imwrite("output/images/matches.jpg", outimg)
 CM = np.array([[2676.1051390718389, -35.243952918157035, -279.58562078697361],
                [0.0097935857180804498, -0.021794052829051412, 0.017776502734846815],
                [0.0046443590741258711, -0.0045664024579022498, 1.]])
+
 bf = cv2.BFMatcher(cv2.NORM_L2, crossCheck=True)
 
 matches = bf.match(descriptors1, descriptors2)
@@ -125,6 +126,9 @@ essentialMatrix, mask = cv2.findEssentialMat(
     cv2.FM_RANSAC,
     confidence,
     ransacReprojecThreshold)
+
+print("match indice size ", len(match_indices))
+print("good match size ", len(good_matches))
 
 inlier_matches = [good_matches[i] for i in match_indices]
 match_indices = np.where(mask.ravel() == 1)[0]
