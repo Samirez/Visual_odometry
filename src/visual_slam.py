@@ -8,7 +8,7 @@ from observation import Observation
 from image_pair import ImagePair
 
 
-class VisualSlam:
+class VisualSlam():
     def __init__(self, inputdirectory, feature="ORB"):
         self.input_directory = inputdirectory
 
