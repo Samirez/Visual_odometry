@@ -26,26 +26,15 @@ class VisualSlam:
         self.feature_history = {}
 
     def set_camera_matrix(self):
-<<<<<<< Updated upstream
-        self.camera_matrix = np.array([[2676.1051390718389, 0., 3840 / 2 - 35.243952918157035], 
-            [0.000000000000e+00, 279.58562078697361, 2160 / 2 - 279.58562078697361],
-            [0.000000000000e+00, 0.000000000000e+00, 1.000000000000e+00]])
 
-        #self.scale_factor = 0.2
-=======
         self.camera_matrix = np.array([[2676.1051390718389, 0., 3840 / 2 - 35.243952918157035],
                                        [0.000000000000e+00, 2676.1051390718389, 2160 / 2 - 279.58562078697361],
                                        [0.000000000000e+00, 0.000000000000e+00, 1.000000000000e+00]])
-        # self.camera_matrix = np.array([[2676, 0., 3840 / 2 - 35.24], 
-        #     [0.000000000000e+00, 2676., 2160 / 2 - 279],
-        #     [0.000000000000e+00, 0.000000000000e+00, 1.000000000000e+00]])
-        # self.scale_factor = 0.2
->>>>>>> Stashed changes
+
         self.scale_factor = 0.3
         # self.scale_factor = 1
         self.camera_matrix *= self.scale_factor
         self.camera_matrix[2, 2] = 1
-
 
     def add_to_list_of_frames(self, image):
         frame = self.frame_generator.make_frame(image)
@@ -364,13 +353,9 @@ class VisualSlam:
             frame = self.process_frame(img)
             self.map.show_map_statistics()
 
-<<<<<<< Updated upstream
-            #cv2.imshow("test", frame);
+            # cv2.imshow("test", frame);
             k = cv2.waitKey(400000)
-=======
-            cv2.imshow("test", frame)
-            k = cv2.waitKey(0)
->>>>>>> Stashed changes
+
             if k == ord('q'):
                 break
             if k == ord('p'):
@@ -394,9 +379,6 @@ def main():
     vs.set_camera_matrix()
     vs.run()
 
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
 if __name__ == "__main__":
     main()

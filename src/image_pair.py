@@ -9,39 +9,38 @@ from initials import *
 # https://www.morethantechnical.com/2016/10/17/structure-from-motion-toy-lib-upgrades-to-opencv-3/
 
 
-def isRotationMatrix(R) :
+def isRotationMatrix(R):
     # Checks if a matrix is a valid rotation matrix.
     Rt = np.transpose(R)
     shouldBeIdentity = np.dot(Rt, R)
-    I = np.identity(3, dtype = R.dtype)
+    I = np.identity(3, dtype=R.dtype)
     n = np.linalg.norm(I - shouldBeIdentity)
     return n < 1e-6
 
 
-def rotationMatrixToEulerAngles(R) :
+def rotationMatrixToEulerAngles(R):
     """Calculates rotation matrix to euler angles
 
     The result is the same as MATLAB except the order
     of the euler angles ( x and z are swapped ).
     """
 
-    assert(isRotationMatrix(R))
-    
-    sy = math.sqrt(R[0,0] * R[0,0] +  R[1,0] * R[1,0])
-    
+    assert (isRotationMatrix(R))
+
+    sy = math.sqrt(R[0, 0] * R[0, 0] + R[1, 0] * R[1, 0])
+
     singular = sy < 1e-6
 
-    if not singular :
-        x = math.atan2(R[2,1] , R[2,2])
-        y = math.atan2(-R[2,0], sy)
-        z = math.atan2(R[1,0], R[0,0])
-    else :
-        x = math.atan2(-R[1,2], R[1,1])
-        y = math.atan2(-R[2,0], sy)
+    if not singular:
+        x = math.atan2(R[2, 1], R[2, 2])
+        y = math.atan2(-R[2, 0], sy)
+        z = math.atan2(R[1, 0], R[0, 0])
+    else:
+        x = math.atan2(-R[1, 2], R[1, 1])
+        y = math.atan2(-R[2, 0], sy)
         z = 0
 
     return np.array([x, y, z])
-
 
 
 # class ImagePair():
@@ -58,7 +57,7 @@ def rotationMatrixToEulerAngles(R) :
 #         self.image1 = img1
 #         self.image2 = img2
 
- 
+
 #     @Timer(text="match_detected_keypoints {:.4f}")
 #     def match_detected_keypoints(self):
 #         # Match descriptors.
@@ -224,17 +223,17 @@ class ImagePair():
     """
     Class for working with image pairs.
     """
+
     def __init__(self, frame1, frame2, matcher, camera_matrix):
         self.frame1 = frame1
         self.frame2 = frame2
         self.matcher = matcher
         self.camera_matrix = camera_matrix
 
-
     def match_features(self):
         temp = self.matcher.match(
-                self.frame1.descriptors, 
-                self.frame2.descriptors)
+            self.frame1.descriptors,
+            self.frame2.descriptors)
         # Make a list with the following values
         # - feature 1 id
         # - feature 2 id
@@ -242,23 +241,21 @@ class ImagePair():
         # - image coordinate 2
         # - match distance
         self.raw_matches = [
-                Match(self.frame1.features[match.queryIdx].feature_id, 
-                    self.frame2.features[match.trainIdx].feature_id,
-                    self.frame1.features[match.queryIdx].keypoint.pt, 
-                    self.frame2.features[match.trainIdx].keypoint.pt, 
-                    self.frame1.features[match.queryIdx].descriptor, 
-                    self.frame2.features[match.trainIdx].descriptor,
-                    match.distance, np.random.random((3))) 
-                for idx, match
-                in enumerate(temp)]
-
+            Match(self.frame1.features[match.queryIdx].feature_id,
+                  self.frame2.features[match.trainIdx].feature_id,
+                  self.frame1.features[match.queryIdx].keypoint.pt,
+                  self.frame2.features[match.trainIdx].keypoint.pt,
+                  self.frame1.features[match.queryIdx].descriptor,
+                  self.frame2.features[match.trainIdx].descriptor,
+                  match.distance, np.random.random((3)))
+            for idx, match
+            in enumerate(temp)]
 
         # Perform a very crude filtering of the matches
         self.filtered_matches = [match
-                for match
-                in self.raw_matches
-                if match.distance < 1130]
-
+                                 for match
+                                 in self.raw_matches
+                                 if match.distance < 1130]
 
     def visualize_matches(self, matches):
         h, w, _ = self.frame1.image.shape
@@ -275,43 +272,40 @@ class ImagePair():
 
         return vis
 
-
     def determine_essential_matrix(self, matches):
         points_in_frame_1, points_in_frame_2 = self.get_image_points(matches)
 
         confidence = 0.99
         ransacReprojecThreshold = 1
         self.essential_matrix, mask = cv2.findEssentialMat(
-                points_in_frame_1,
-                points_in_frame_2, 
-                self.camera_matrix, 
-                cv2.FM_RANSAC, 
-                confidence,
-                ransacReprojecThreshold)
+            points_in_frame_1,
+            points_in_frame_2,
+            self.camera_matrix,
+            cv2.FM_RANSAC,
+            confidence,
+            ransacReprojecThreshold)
 
-        inlier_matches = [match 
-                for match, inlier in zip(matches, mask.ravel() == 1)
-                if inlier]
+        inlier_matches = [match
+                          for match, inlier in zip(matches, mask.ravel() == 1)
+                          if inlier]
 
         return inlier_matches
 
-
     def get_image_points(self, matches):
         points_in_frame_1 = np.array(
-                [match.keypoint1 for match in matches], dtype=np.float64)
+            [match.keypoint1 for match in matches], dtype=np.float64)
         points_in_frame_2 = np.array(
-                [match.keypoint2 for match in matches], dtype=np.float64)
+            [match.keypoint2 for match in matches], dtype=np.float64)
         return points_in_frame_1, points_in_frame_2
-
 
     def estimate_camera_movement(self, matches):
         points_in_frame_1, points_in_frame_2 = self.get_image_points(matches)
 
         retval, self.R, self.t, mask = cv2.recoverPose(
-                self.essential_matrix, 
-                points_in_frame_1, 
-                points_in_frame_2, 
-                self.camera_matrix)
+            self.essential_matrix,
+            points_in_frame_1,
+            points_in_frame_2,
+            self.camera_matrix)
         self.relative_pose = np.eye(4)
         self.relative_pose[:3, :3] = self.R
         self.relative_pose[:3, 3] = self.t.T[0]
@@ -319,10 +313,9 @@ class ImagePair():
         print("relative movement in image pair")
         print(self.relative_pose)
 
-
-    def reconstruct_3d_points(self, matches,  
-            first_projection_matrix = None, 
-            second_projection_matrix = None):
+    def reconstruct_3d_points(self, matches,
+                              first_projection_matrix=None,
+                              second_projection_matrix=None):
         identify_transform = np.array([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0]])
         estimated_transform = np.hstack((self.R.T, -self.R.T @ self.t))
 
@@ -337,25 +330,25 @@ class ImagePair():
         points_in_frame_1, points_in_frame_2 = self.get_image_points(matches)
 
         self.points3d_reconstr = cv2.triangulatePoints(
-                self.projection_matrix, 
-                self.null_projection_matrix,
-                points_in_frame_1.T, 
-                points_in_frame_2.T) 
+            self.projection_matrix,
+            self.null_projection_matrix,
+            points_in_frame_1.T,
+            points_in_frame_2.T)
 
         # Convert back to unit value in the homogeneous part.
         self.points3d_reconstr /= self.points3d_reconstr[3, :]
 
         self.matches_with_3d_information = [
-                Match3D(match.featureid1, match.featureid2, 
-                    match.keypoint1, match.keypoint2, 
-                    match.descriptor1, match.descriptor2, 
+            Match3D(match.featureid1, match.featureid2,
+                    match.keypoint1, match.keypoint2,
+                    match.descriptor1, match.descriptor2,
                     match.distance, match.color,
                     (self.points3d_reconstr[0, idx],
-                        self.points3d_reconstr[1, idx],
-                        self.points3d_reconstr[2, idx]))
-                for idx, match 
-                in enumerate(matches)]
-        
+                     self.points3d_reconstr[1, idx],
+                     self.points3d_reconstr[2, idx]))
+            for idx, match
+            in enumerate(matches)]
+
         print("Reconstructed points")
         print(self.points3d_reconstr.transpose().shape)
         print(self.points3d_reconstr.transpose())

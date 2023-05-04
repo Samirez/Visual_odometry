@@ -34,5 +34,7 @@ def check_directories():
         os.makedirs('./output/images')
     if not os.path.exists('./output/video'):
         os.makedirs('./output/video')
+
+
 if __name__ == '__main__':
     main()
