@@ -1,7 +1,7 @@
 from initials import *
 
 
-class ImageAndKeypoints:
+class ImageAndKeypoints():
     def __init__(self, detector_name):
         if detector_name == "ORB":
             # Use ORB features

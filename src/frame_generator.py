@@ -2,7 +2,7 @@ from initials import *
 from frame import Frame
 
 
-class FrameGenerator:
+class FrameGenerator():
     def __init__(self, detector):
         self.next_image_counter = 0
         self.detector = detector

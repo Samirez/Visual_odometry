@@ -1,7 +1,7 @@
 from initials import *
 
 
-class Frame:
+class Frame():
     """
     Class / structure for saving information about a single frame.
     """
