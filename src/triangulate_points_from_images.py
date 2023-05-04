@@ -2,17 +2,17 @@ from initials import *
 from image_and_keypoints import ImageAndKeypoints
 from image_pair import ImagePair
 from map import Map
+
+
 class TriangulatePointsFromTwoImages():
     def __init__(self):
         pass
-
 
     @Timer(text="load_images {:.4f}")
     def load_images(self, filename_one, filename_two):
         # Load images
         self.img1 = cv2.imread(filename_one)
         self.img2 = cv2.imread(filename_two)
-
 
     def run(self, filename_one, filename_two):
         self.load_images(filename_one, filename_two)
@@ -33,9 +33,9 @@ class TriangulatePointsFromTwoImages():
         pair12.visualise_points_in_3d_with_plotly()
 
         map = Map()
-        
+
         visualization12 = pair12.visualize_filtered_matches()
         cv2.imwrite("./output/images/filtered_matches.png", visualization12)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
-        return 
+        return

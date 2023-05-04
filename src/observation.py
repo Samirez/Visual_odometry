@@ -1,6 +1,7 @@
 from initials import *
 
-class Observation():
+
+class Observation:
     def __init__(self, point_id, camera_id, image_coordinates):
         self.point_id = point_id
         self.camera_id = camera_id

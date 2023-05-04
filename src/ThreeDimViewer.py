@@ -1,12 +1,12 @@
 import pygame
 import pygame.locals as pgl
 import numpy as np
-from PIL import Image # type: ignore
+from PIL import Image  # type: ignore
 
-import OpenGL.GL as gl # type: ignore
-import OpenGL.GLU as glu # type: ignore
+import OpenGL.GL as gl  # type: ignore
+import OpenGL.GLU as glu  # type: ignore
 
-from icecream import ic # type: ignore
+from icecream import ic  # type: ignore
 
 verticies = (
     (1, -1, -1),
@@ -17,22 +17,22 @@ verticies = (
     (1, 1, 1),
     (-1, -1, 1),
     (-1, 1, 1)
-    )
+)
 
 edges = (
-    (0,1),
-    (0,3),
-    (0,4),
-    (2,1),
-    (2,3),
-    (2,7),
-    (6,3),
-    (6,4),
-    (6,7),
-    (5,1),
-    (5,4),
-    (5,7)
-    )
+    (0, 1),
+    (0, 3),
+    (0, 4),
+    (2, 1),
+    (2, 3),
+    (2, 7),
+    (6, 3),
+    (6, 4),
+    (6, 7),
+    (5, 1),
+    (5, 4),
+    (5, 7)
+)
 
 
 def CubeLines():
@@ -59,19 +59,17 @@ class ThreeDimViewer:
         self.cameras = []
         self.camera_texture_ids = []
 
-
     def initialize_window(self):
         self.display = (800, 600)
-        self.screen = pygame.display.set_mode(self.display, pgl.DOUBLEBUF|pgl.OPENGL|pgl.RESIZABLE)
+        self.screen = pygame.display.set_mode(self.display, pgl.DOUBLEBUF | pgl.OPENGL | pgl.RESIZABLE)
         gl.glMatrixMode(gl.GL_PROJECTION)
         horizontal_field_of_view = 75
         near_clipping_distance = 0.01
         far_clipping_distance = 500.0
-        glu.gluPerspective(horizontal_field_of_view, 
-                           (self.display[0]/self.display[1]), 
-                           near_clipping_distance, 
+        glu.gluPerspective(horizontal_field_of_view,
+                           (self.display[0] / self.display[1]),
+                           near_clipping_distance,
                            far_clipping_distance)
-
 
     def set_opengl_settings(self):
         gl.glEnable(gl.GL_DEPTH_TEST)
@@ -79,7 +77,6 @@ class ThreeDimViewer:
         gl.glEnable(gl.GL_LIGHT0)
         gl.glLightfv(gl.GL_LIGHT0, gl.GL_AMBIENT, [1.0, 1.0, 1.0, 1])
         gl.glLightfv(gl.GL_LIGHT0, gl.GL_DIFFUSE, [1.0, 1.0, 1.0, 1])
-
 
     def set_initial_camera_position(self):
         gl.glMatrixMode(gl.GL_MODELVIEW)
@@ -90,12 +87,10 @@ class ThreeDimViewer:
         # Move the viewport a bit behind and above the camera
         gl.glTranslatef(0, 0.5, 1.0)
 
-
     def initialize_state_variables(self):
         self.run = True
         self.terminate = False
         self.paused = False
-
 
     def handle_pygame_events(self):
         for event in pygame.event.get():
@@ -111,13 +106,12 @@ class ThreeDimViewer:
                     self.terminate = True
                 if event.key == pygame.K_PAUSE or event.key == pygame.K_p:
                     self.paused = not self.paused
-                    pygame.mouse.set_pos(self.displayCenter) 
+                    pygame.mouse.set_pos(self.displayCenter)
 
-            if not self.paused: 
+            if not self.paused:
                 if event.type == pygame.MOUSEMOTION:
                     self.mouseMove = [event.pos[i] - self.displayCenter[i] for i in range(2)]
-                pygame.mouse.set_pos(self.displayCenter)  
-
+                pygame.mouse.set_pos(self.displayCenter)
 
     def update_camera_position(self):
         viewMatrix = gl.glGetFloatv(gl.GL_MODELVIEW_MATRIX)
@@ -125,8 +119,8 @@ class ThreeDimViewer:
         # More or less magic to make the camera movements work decently.
         gl.glPushMatrix()
         gl.glLoadIdentity()
-        gl.glRotatef(0.1*self.mouseMove[1], 1.0, 0.0, 0.0)
-        gl.glRotatef(0.1*self.mouseMove[0], 0.0, 1.0, 0.0)
+        gl.glRotatef(0.1 * self.mouseMove[1], 1.0, 0.0, 0.0)
+        gl.glRotatef(0.1 * self.mouseMove[0], 0.0, 1.0, 0.0)
         self.mouseMove = (0, 0)
         gl.glMultMatrixf(viewMatrix)
         viewMatrix = gl.glGetFloatv(gl.GL_MODELVIEW_MATRIX)
@@ -134,7 +128,6 @@ class ThreeDimViewer:
         gl.glLoadIdentity()
         self.move_based_on_key_inputs()
         gl.glMultMatrixf(viewMatrix)
-
 
     def move_based_on_key_inputs(self):
         keypress = pygame.key.get_pressed()
@@ -155,7 +148,6 @@ class ThreeDimViewer:
         if keypress[pygame.K_e]:
             gl.glTranslatef(0, -move_scale, 0)
 
-
     def draw_vertices(self):
         gl.glPushMatrix()
         gl.glColor3f(1.0, 0.0, 1.0)
@@ -167,7 +159,6 @@ class ThreeDimViewer:
             gl.glVertex3fv(vertex)
         gl.glEnd()
         gl.glPopMatrix()
-
 
     def draw_cameras(self):
         for counter, camera in enumerate(self.cameras):
@@ -201,7 +192,6 @@ class ThreeDimViewer:
 
             gl.glPopMatrix()
 
-
     def loadTextures(self):
         for counter, camera in enumerate(self.cameras):
             textureData = Image.fromarray(camera.frame)
@@ -214,13 +204,12 @@ class ThreeDimViewer:
 
             gl.glBindTexture(gl.GL_TEXTURE_2D, self.camera_texture_ids[-1])
             gl.glTexImage2D(gl.GL_TEXTURE_2D, 0, gl.GL_RGB, width, height,
-                         0, gl.GL_RGBA, gl.GL_UNSIGNED_BYTE, textureData)
+                            0, gl.GL_RGBA, gl.GL_UNSIGNED_BYTE, textureData)
 
             gl.glTexParameterf(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_WRAP_S, gl.GL_REPEAT)
             gl.glTexParameterf(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_WRAP_T, gl.GL_REPEAT)
             gl.glTexParameterf(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_MAG_FILTER, gl.GL_NEAREST)
             gl.glTexParameterf(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_MIN_FILTER, gl.GL_NEAREST)
-
 
     def main(self):
         self.displayCenter = [self.screen.get_size()[i] // 2 for i in range(2)]
@@ -241,9 +230,8 @@ class ThreeDimViewer:
         if self.terminate:
             quit()
 
-
     def update_view(self):
-        gl.glClear(gl.GL_COLOR_BUFFER_BIT|gl.GL_DEPTH_BUFFER_BIT)
+        gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
 
         gl.glPushMatrix()
 
@@ -254,10 +242,8 @@ class ThreeDimViewer:
         gl.glPopMatrix()
 
 
-
 if __name__ == "__main__":
     tdv = ThreeDimViewer()
     tdv.vertices = ((1, 2, 3), (1, 2, 2), (1, 2, 1), (1, 1, 2))
     tdv.colors = ((0, 0, 1), (0, 1, 0), (1, 0, 0), (1, 1, 0))
     tdv.main()
-

@@ -1,5 +1,5 @@
-from initials import *
 from triangulate_points_from_images import TriangulatePointsFromTwoImages
+from visual_slam import VisualSlam
 
 
 def main():
@@ -10,9 +10,9 @@ def main():
     TPFTI = TriangulatePointsFromTwoImages()
     TPFTI.run(frame1, frame2)
 
-    # cv2.imshow("frame1",frame1)
-    # cv2.imshow("frame2",frame2)
-    # cv2.triangulatePoints(frame1, frame2)
+    # vs = VisualSlam("./input/images")
+    # vs.set_camera_matrix()
+    # vs.run()
 
 
 if __name__ == "__main__":
