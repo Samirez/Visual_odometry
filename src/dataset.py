@@ -55,3 +55,4 @@ for x in range(1, len(location_list)):
 plt.plot(easting, northing)
 plt.savefig('drone_flight_path.png')   # save the figure to file
 plt.close()    # close the figure window
+
